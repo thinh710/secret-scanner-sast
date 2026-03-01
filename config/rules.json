@@ -1,0 +1,182 @@
+[
+  {
+    "id": "aws_access_key",
+    "type": "secret",
+    "name": "AWS Access Key",
+    "pattern": "AKIA[0-9A-Z]{16}",
+    "confidence": "High",
+    "severity": "Critical",
+    "remediation": "Xóa key khỏi code, sử dụng IAM role hoặc environment variables. Nếu đã lộ, revoke ngay lập tức."
+  },
+  {
+    "id": "aws_secret_key_context",
+    "type": "secret",
+    "name": "AWS Secret Key (contextual)",
+    "pattern": "(?i)\\b(aws_?secret_?access_?key|secret_access_key|awssecretkey)\\b\\s*[=:]\\s*['\\\"]?([0-9a-zA-Z/+]{40})['\\\"]?",
+    "confidence": "High",
+    "severity": "Critical",
+    "capture_group": 2,
+    "min_length": 40,
+    "entropy_threshold": 3.2,
+    "remediation": "Xóa key, dùng environment variables hoặc secret manager. Revoke/rotate nếu đã lộ."
+  },
+  {
+    "id": "github_token_classic",
+    "type": "secret",
+    "name": "GitHub Token (classic)",
+    "pattern": "ghp_[0-9a-zA-Z]{36}",
+    "confidence": "High",
+    "severity": "Critical",
+    "remediation": "Xóa token, revoke token cũ, tạo token mới với quyền hạn tối thiểu và lưu vào env/secret manager."
+  },
+  {
+    "id": "github_token_finegrained",
+    "type": "secret",
+    "name": "GitHub Fine-grained Token",
+    "pattern": "github_pat_[0-9a-zA-Z]{22}_[0-9a-zA-Z]{59}",
+    "confidence": "High",
+    "severity": "Critical",
+    "remediation": "Xóa token, revoke token cũ, tạo token mới và lưu an toàn (env/secret manager)."
+  },
+  {
+    "id": "generic_password",
+    "type": "secret",
+    "name": "Generic Password",
+    "pattern": "(?i)(password|passwd|pwd)\\s*[=:]\\s*['\\\"]?([^'\\\"\\s]{8,})['\\\"]?",
+    "confidence": "Medium",
+    "severity": "High",
+    "min_length": 8,
+    "capture_group": 2,
+    "keywords": [
+      "password",
+      "pass",
+      "pwd"
+    ],
+    "entropy_threshold": 3.5,
+    "remediation": "Chuyển mật khẩu vào file .env, thêm .env vào .gitignore, tạo .env.example."
+  },
+  {
+    "id": "private_key",
+    "type": "secret",
+    "name": "Private Key",
+    "pattern": "-----BEGIN (RSA|DSA|EC|OPENSSH) PRIVATE KEY-----",
+    "confidence": "High",
+    "severity": "Critical",
+    "remediation": "Xóa private key khỏi repo. Nếu đã public, tạo cặp key mới và cập nhật. Purge khỏi git history nếu cần."
+  },
+  {
+    "id": "db_connection_string",
+    "type": "secret",
+    "name": "Database Connection String",
+    "pattern": "(mongodb(\\+srv)?|mysql|postgresql)://[^\\s]+",
+    "confidence": "High",
+    "severity": "Critical",
+    "remediation": "Chuyển connection string vào biến môi trường/secret manager. Đổi mật khẩu nếu lộ."
+  },
+  {
+    "id": "slack_token",
+    "type": "secret",
+    "name": "Slack Token",
+    "pattern": "xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9a-zA-Z]{24}",
+    "confidence": "High",
+    "severity": "Critical",
+    "remediation": "Xóa token, revoke token cũ và tạo token mới (lưu vào env/secret manager)."
+  },
+  {
+    "id": "sqli_concat",
+    "type": "sast",
+    "name": "SQL Injection - string concatenation",
+    "pattern": "(execute\\(|query\\(|prepare\\().*\\+.*\\$_(GET|POST|REQUEST)",
+    "language": [
+      "php",
+      "python",
+      "javascript"
+    ],
+    "severity": "Critical",
+    "remediation": "Sử dụng parameterized queries hoặc prepared statements. Không nối chuỗi từ input."
+  },
+  {
+    "id": "command_injection",
+    "type": "sast",
+    "name": "Command Injection",
+    "pattern": "(exec\\(|system\\(|passthru\\(|`.*\\$.*`)",
+    "language": [
+      "php",
+      "python",
+      "javascript",
+      "ruby"
+    ],
+    "severity": "Critical",
+    "remediation": "Tránh gọi lệnh hệ thống với input chưa kiểm tra. Ưu tiên API an toàn; nếu bắt buộc, validate/allowlist input."
+  },
+  {
+    "id": "hardcoded_password_code",
+    "type": "sast",
+    "name": "Hardcoded Password (code)",
+    "pattern": "password\\s*=\\s*['\\\"][^'\\\"]{4,}['\\\"]",
+    "language": [
+      "*"
+    ],
+    "severity": "High",
+    "remediation": "Chuyển mật khẩu vào file cấu hình hoặc biến môi trường (không commit secrets)."
+  },
+  {
+    "id": "insecure_file_upload_php",
+    "type": "sast",
+    "name": "Insecure File Upload",
+    "pattern": "move_uploaded_file\\(.+\\$_(FILES|GET|POST)",
+    "language": [
+      "php"
+    ],
+    "severity": "High",
+    "remediation": "Kiểm tra loại file, kích thước, lưu ngoài webroot. Đặt tên file an toàn, disable execute, và scan malware."
+  },
+  {
+    "id": "sqli_var_in_query_php",
+    "type": "sast",
+    "name": "SQL Injection - variable in query (PHP)",
+    "pattern": "->query\\(.*\\$[a-zA-Z_][a-zA-Z0-9_]*\\)",
+    "language": [
+      "php"
+    ],
+    "severity": "High",
+    "confidence": "Medium",
+    "remediation": "Sử dụng prepared statements hoặc parameterized queries. Không truyền biến trực tiếp vào query."
+  },
+  {
+    "id": "sqli_concat_request_python",
+    "type": "sast",
+    "name": "SQL Injection - concatenation with request (Python)",
+    "pattern": "(SELECT|INSERT|UPDATE|DELETE).*\\+.*(request\\.args|request\\.form|request\\.get|request\\.post|request\\.values|request\\.json|request\\.cookies|request\\.headers|request\\.data|request\\.query_string)",
+    "language": [
+      "python"
+    ],
+    "severity": "Critical",
+    "confidence": "High",
+    "remediation": "Sử dụng parameterized queries hoặc ORM. Không nối chuỗi với input."
+  },
+  {
+    "id": "sqli_concat_superglobal_php",
+    "type": "sast",
+    "name": "SQL Injection - concatenation with superglobal (PHP)",
+    "pattern": "(SELECT|INSERT|UPDATE|DELETE).*\\.\\\\s*\\\\$_(GET|POST|REQUEST|COOKIE|SERVER|ENV|SESSION)",
+    "language": [
+      "php"
+    ],
+    "severity": "Critical",
+    "confidence": "High",
+    "remediation": "Sử dụng prepared statements. Không nối chuỗi với input từ superglobals."
+  },
+  {
+    "id": "sqli_var_concat_php",
+    "type": "sast",
+    "name": "SQL Injection - variable concatenation in SQL (PHP)",
+    "pattern": "(SELECT|INSERT|UPDATE|DELETE).*\\.\\\\s*\\\\$[a-zA-Z_][a-zA-Z0-9_]*",
+    "language": [
+      "php"
+    ],
+    "severity": "High",
+    "confidence": "Medium",
+    "remediation": "Kiểm tra nguồn gốc biến. Nếu biến từ input, dùng prepared statements."
+  }
+]

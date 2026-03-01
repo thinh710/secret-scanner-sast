@@ -1,0 +1,33 @@
+# Default ignore patterns (gitignore style)
+.git/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+dist/
+build/
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Common binaries / archives
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pdf
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
+*.exe
+*.dll
+*.so
+*.dylib
+*.class
+*.jar
