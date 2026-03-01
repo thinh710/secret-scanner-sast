@@ -10,21 +10,25 @@ Tool Python CLI để quét:
 
 ```bash
 pip install -r requirements.txt
-```
+```<img width="1017" height="554" alt="image" src="https://github.com/user-attachments/assets/ad39a8b1-3cb1-437f-8d29-0864530b0552" />
+
 
 ## Chạy
 
 Quét và in ra console:
 ```bash
 python cli.py .
-```
+```<img width="1645" height="781" alt="image" src="https://github.com/user-attachments/assets/5f589992-5f42-4112-95ab-a344d02b478b" />
+
 
 Xuất JSON/CSV/HTML:
 ```bash
 python cli.py . -o report.json
 python cli.py . -o report.csv
 python cli.py . -o report.html
-```
+```<img width="1573" height="335" alt="image" src="https://github.com/user-attachments/assets/abf9318c-a2fe-4092-928e-917f1a64f079" />
+<img width="1874" height="921" alt="image" src="https://github.com/user-attachments/assets/31e94286-f498-4164-bbc1-98756a61a8c5" />
+
 
 Tắt SAST (chỉ quét secrets):
 ```bash
@@ -56,7 +60,8 @@ Run on Windows (Tkinter is built-in):
 
 ```bat
 run_gui.bat
-```
+```<img width="1557" height="826" alt="image" src="https://github.com/user-attachments/assets/78dff986-44fb-4e6e-b52d-be7ace2e104b" />
+
 
 Options:
 - Pick a folder to scan
