@@ -60,7 +60,7 @@ Sửa `config/rules.json`:
 
 ## GUI (no CLI)
 Run on Windows (Tkinter is built-in):
-
+Chạy file run_gui.bat và nhấn enter để tự động cài packet
 ```bat
 run_gui.bat
 ```
